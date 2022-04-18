@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Case Converter</title>
+    <style>
+        body {
+            font-family:  "Roboto", sans-serif;
+            vertical-align: auto;
+        }
+        .title{
+            text-align: left;
+            margin: 1rem;
+        }
+        button{
+            background-color: #FFA07A;
+            padding: 0.4rem;
+            border: none;
+            border-radius: 0.2rem;
+            margin: 0.5rem;
+            font-size: medium;
+        }
+        textarea{
+            margin: 1rem;
+            width: 90%;
+            height: 80%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="title"><h1>Case Converter</h1></div>
+    <label>
+    <textarea id="text-area" rows="30"></textarea>
+    </label>>
+</div>
+<div class="buttons">
+    <button id="upper-case">Upper Case</button>
+    <button id="lower-case">Lower Case</button>
+    <button id="proper-case">Proper Case</button>
+    <button id="sentence-case">Sentence Case</button>
+    <button id="save-text-file">Save Text File</button>
+</div>
+<script>
+    function properCase(s) {
+        return s.charAt(0).toUpperCase() + s.substring(1, s.length).toLowerCase();
+    }
+    function changeCase(caseType, str) {
+        switch (caseType) {
+            case 'upper-case': return str.toUpperCase();
+            case 'lower-case': return str.toLowerCase();
+            case 'proper-case': return str.split(" ").map(properCase).join(" ");
+            case 'sentence-case': return str.split(". ").map(properCase).join(". ");
+            case 'save-text-file': download("text.txt", str)
+        }
+    }
+
+    function download(filename, text) {
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    document.querySelectorAll("button").forEach(b => b.addEventListener("click", (e) => {
+        let id = e.path[0].id;
+        let ta = document.getElementById("text-area");
+        ta.value = changeCase(id,ta.value);
+        console.log("Convert text to " + id.substring(0, id.indexOf('-') - 1) + " case");
+    }));
+</script>
+</body>
+</html>
